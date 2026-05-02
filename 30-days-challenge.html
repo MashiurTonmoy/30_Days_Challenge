@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>৩০ দিনের চ্যালেঞ্জ</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --blue: #2563eb;
+    --blue-dark: #1d4ed8;
+    --blue-light: #dbeafe;
+    --green: #16a34a;
+    --green-light: #dcfce7;
+    --amber: #d97706;
+    --amber-light: #fef3c7;
+    --red: #dc2626;
+    --slate-50: #f8fafc;
+    --slate-100: #f1f5f9;
+    --slate-200: #e2e8f0;
+    --slate-300: #cbd5e1;
+    --slate-400: #94a3b8;
+    --slate-500: #64748b;
+    --slate-600: #475569;
+    --slate-700: #334155;
+    --slate-800: #1e293b;
+    --slate-900: #0f172a;
+    --bg: #f0f4f8;
+    --card-gradient: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 50%, #6366f1 100%);
+    --radius-xl: 40px;
+    --radius-lg: 32px;
+    --radius-md: 24px;
+    --radius-sm: 16px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
+    --shadow-blue: 0 8px 32px rgba(37,99,235,0.25);
+  }
+
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Space Grotesk', 'Noto Sans Bengali', sans-serif;
+    background: var(--bg);
+    color: var(--slate-900);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+  }
+
+  /* ═══════════════════════════════════════════
+     ONBOARDING OVERLAY
+  ═══════════════════════════════════════════ */
+  #onboarding {
+    position: fixed; inset: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: center; padding: 1rem;
+    background: rgba(15,23,42,0.85);
+    backdrop-filter: blur(12px);
+    animation: fadeIn .3s ease;
+  }
+  #onboarding.hidden { display: none; }
+  .onboarding-card {
+    background: #fff;
+    width: 100%; max-width: 480px;
+    border-radius: var(--radius-xl);
+    padding: 2.5rem;
+    box-shadow: var(--shadow-lg);
+    animation: scaleIn .35s cubic-bezier(.34,1.56,.64,1);
+  }
+  .onboarding-icon {
+    width: 64px; height: 64px;
+    background: var(--blue-light);
+    border-radius: 18px;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1.5rem;
+  }
+  .onboarding-icon svg { width:32px;height:32px;color:var(--blue); }
+  .onboarding-card h2 {
+    font-size: 1.4rem; font-weight: 900;
+    color: var(--slate-800); line-height: 1.35;
+    text-align: center; margin-bottom: 1.5rem;
+    font-family: 'Noto Sans Bengali', sans-serif;
+  }
+  .rules-box {
+    background: var(--slate-50); border: 1px solid var(--slate-100);
+    border-radius: 24px; padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .rules-label {
+    font-size: .65rem; font-weight: 900;
+    color: var(--blue); text-transform: uppercase;
+    letter-spacing: .15em; margin-bottom: .75rem;
+  }
+  .rules-box ul { list-style: none; display: flex; flex-direction: column; gap: .75rem; }
+  .rules-box li {
+    display: flex; gap: .75rem;
+    color: var(--slate-600); font-weight: 500; font-size: .9rem;
+    font-family: 'Noto Sans Bengali', sans-serif; line-height: 1.5;
+  }
+  .dot-icon {
+    width: 20px; height: 20px; min-width: 20px;
+    background: var(--blue-light); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; margin-top: 2px;
+  }
+  .dot-icon::after { content:''; width:8px;height:8px;background:var(--blue);border-radius:50%; }
+
+  .agree-label {
+    display: flex; align-items: center; gap: .75rem;
+    cursor: pointer; padding: .5rem; justify-content: center;
+    margin-bottom: 1.25rem;
+  }
+  .agree-label input[type=checkbox] { display: none; }
+  .checkbox-ui {
+    width: 24px; height: 24px; min-width: 24px;
+    border: 2px solid var(--slate-200); border-radius: 8px;
+    background: #fff; transition: all .2s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .agree-label input:checked + .checkbox-ui {
+    background: var(--blue); border-color: var(--blue);
+  }
+  .agree-label input:checked + .checkbox-ui::after {
+    content: '✓'; color: #fff; font-size: .85rem; font-weight: 700;
+  }
+  .agree-text {
+    font-size: .85rem; font-weight: 700; color: var(--slate-500);
+    font-family: 'Noto Sans Bengali', sans-serif;
+  }
+  .btn-primary {
+    width: 100%; padding: 1.1rem;
+    background: var(--blue); color: #fff;
+    border: none; border-radius: var(--radius-md);
+    font-size: 1.05rem; font-weight: 800;
+    cursor: pointer; transition: all .2s;
+    box-shadow: var(--shadow-blue);
+  }
+  .btn-primary:hover:not(:disabled) { background: var(--blue-dark); transform: translateY(-1px); }
+  .btn-primary:active:not(:disabled) { transform: scale(.97); }
+  .btn-primary:disabled { background: var(--slate-100); color: var(--slate-400); cursor: not-allowed; box-shadow: none; }
+
+  /* ═══════════════════════════════════════════
+     HEADER
+  ═══════════════════════════════════════════ */
+  header {
+    width: 100%; background: #fff;
+    border-bottom: 1px solid var(--slate-100);
+    box-shadow: var(--shadow-sm);
+    padding: 1rem; display: flex;
+    justify-content: center;
+    position: sticky; top: 0; z-index: 40;
+  }
+  .header-inner {
+    width: 100%; max-width: 900px;
+    display: flex; align-items: center;
+    justify-content: space-between;
+  }
+  .logo { display:flex; align-items:center; gap:.75rem; }
+  .logo-box {
+    width:40px; height:40px;
+    background: var(--blue); border-radius: 10px;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow: var(--shadow-blue);
+  }
+  .logo-box span { color:#fff; font-weight:800; font-size:1.1rem; }
+  .logo-text { font-size:1.05rem; font-weight:700; color:var(--slate-800); }
+  @media(max-width:480px) { .logo-text { display:none; } }
+
+  .streak-badge {
+    display:flex; align-items:center; gap:.5rem;
+    background: #f0fdf4; border: 1px solid #bbf7d0;
+    padding: .4rem 1rem; border-radius: 99px;
+    box-shadow: var(--shadow-sm);
+  }
+  .streak-badge .flame { color: #16a34a; font-size: 1rem; }
+  .streak-badge span { font-size:.7rem; font-weight:900; color:#14532d; text-transform:uppercase; letter-spacing:.05em; white-space:nowrap; }
+
+  .settings-btn {
+    width:40px; height:40px;
+    background: var(--slate-100); border: 2px solid var(--slate-200);
+    border-radius: 50%; cursor: pointer; display:flex;
+    align-items:center; justify-content:center;
+    transition: all .2s;
+  }
+  .settings-btn:hover { border-color: var(--blue); }
+  .settings-btn svg { width:18px; height:18px; color:var(--slate-500); }
+
+  /* ═══════════════════════════════════════════
+     MAIN LAYOUT
+  ═══════════════════════════════════════════ */
+  main {
+    width: 100%; max-width: 1100px;
+    padding: 1.5rem 1rem;
+    display: flex; flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: center;
+  }
+  .left-col { flex: 0 0 360px; max-width: 360px; }
+  .right-col { flex: 1 1 360px; max-width: 520px; display: flex; flex-direction: column; gap: 1.5rem; }
+  @media(max-width: 800px) { .left-col, .right-col { flex: 1 1 100%; max-width: 100%; } }
+
+  /* ═══════════════════════════════════════════
+     CHALLENGE CARD
+  ═══════════════════════════════════════════ */
+  .challenge-card {
+    width: 100%;
+    background: var(--card-gradient);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-blue);
+    padding: 2rem;
+    min-height: 500px;
+    display: flex; flex-direction: column;
+    justify-content: space-between;
+    position: relative; overflow: hidden;
+    transition: opacity .4s;
+  }
+  .challenge-card::before {
+    content:''; position:absolute;
+    top:-60px; right:-60px;
+    width:200px; height:200px;
+    background: rgba(255,255,255,.06);
+    border-radius: 50%; pointer-events:none;
+  }
+  .card-header { text-align: center; margin-bottom: 1.5rem; position: relative; z-index:1; }
+  .card-label {
+    display:inline-flex; align-items:center; gap:.4rem;
+    color: rgba(255,255,255,.6); font-size:.65rem;
+    text-transform:uppercase; letter-spacing:.2em; font-weight:800;
+    margin-bottom: .4rem;
+  }
+  .card-label svg { width:14px;height:14px; }
+  .card-day { color:#fff; font-size:2rem; font-weight:900; }
+
+  .tasks-list { display:flex; flex-direction:column; gap:1rem; flex-grow:1; padding: .5rem 0; position:relative;z-index:1; }
+  .task-btn {
+    width: 100%;
+    background: rgba(255,255,255,.08);
+    border: 2px solid transparent;
+    border-radius: 24px;
+    padding: 1.25rem 1.25rem;
+    cursor: pointer;
+    text-align: left;
+    transition: all .25s;
+    display: flex; flex-direction: column; gap: .5rem;
+    color: rgba(255,255,255,.9);
+  }
+  .task-btn:hover:not(:disabled) {
+    background: rgba(255,255,255,.14);
+    border-color: rgba(255,255,255,.2);
+  }
+  .task-btn.done {
+    background: rgba(59,130,246,.45);
+    border-color: rgba(147,197,253,.7);
+  }
+  .task-btn:disabled {
+    opacity: .5; cursor: not-allowed;
+  }
+  .task-checkbox {
+    width: 24px; height: 24px;
+    border: 2px solid rgba(255,255,255,.3);
+    border-radius: 7px;
+    background: rgba(255,255,255,.05);
+    display:flex; align-items:center; justify-content:center;
+    transition: all .2s;
+    flex-shrink: 0;
+  }
+  .task-btn.done .task-checkbox {
+    background: #fff; border-color: #fff;
+  }
+  .task-btn.done .task-checkbox::after { content:'✓'; color: var(--blue); font-size:.85rem; font-weight:800; }
+  .task-btn:disabled:not(.done) .task-checkbox::after { content:'🔒'; font-size:.65rem; }
+  .task-text { font-size:.95rem; font-weight:500; line-height:1.5; font-family:'Noto Sans Bengali',sans-serif; }
+
+  .card-footer { position:relative;z-index:1; display:flex; justify-content:center; padding-top:1rem; }
+  .card-status {
+    background: rgba(255,255,255,.1);
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 99px; padding: .4rem 1.25rem;
+    font-size:.6rem; text-transform:uppercase;
+    font-weight:900; letter-spacing:.15em;
+    color:rgba(255,255,255,.6);
+    display:flex; align-items:center; gap:.5rem;
+    font-family:'Noto Sans Bengali',sans-serif;
+  }
+
+  /* ═══════════════════════════════════════════
+     MOTIVATION CARD
+  ═══════════════════════════════════════════ */
+  .motivation-card {
+    background: #fff; border: 1px solid var(--slate-100);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+    padding: 2rem 2.5rem;
+    height: 320px;
+    display: flex; flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden; position: relative;
+  }
+  .motivation-card::after {
+    content:'★'; position:absolute; top:1rem; right:1.25rem;
+    font-size:2rem; color:var(--slate-100);
+    transition: transform .3s;
+  }
+  .motivation-card:hover::after { transform: rotate(15deg); }
+  .wisdom-label {
+    display:flex; align-items:center; gap:.75rem;
+    font-size:.6rem; font-weight:900; color:var(--slate-400);
+    text-transform:uppercase; letter-spacing:.25em;
+    margin-bottom: 1.25rem;
+  }
+  .wisdom-label::before { content:''; flex-shrink:0; width:40px; height:2px; background:var(--blue-light); }
+  .wisdom-text {
+    font-size:1.1rem; line-height:1.6;
+    color: var(--slate-800); font-style:italic;
+    font-weight:500; flex-grow:1;
+    overflow: auto;
+    font-family:'Noto Sans Bengali',sans-serif;
+  }
+  .mot-footer {
+    display:flex; align-items:center;
+    justify-content:space-between;
+    padding-top:1rem;
+    border-top:1px solid var(--slate-50);
+    margin-top:.5rem;
+  }
+  .mot-label { color:var(--blue); font-size:.65rem; font-weight:900; text-transform:uppercase; letter-spacing:.12em; }
+  .mot-nav { display:flex; gap:.75rem; }
+  .mot-nav button {
+    width:36px; height:36px; border-radius:50%;
+    border:1px solid transparent; background:transparent;
+    cursor:pointer; color:var(--slate-300);
+    display:flex; align-items:center; justify-content:center;
+    transition:all .2s; font-size:1rem;
+  }
+  .mot-nav button:hover { background:var(--blue-light); color:var(--blue); border-color:var(--blue-light); }
+
+  /* ═══════════════════════════════════════════
+     PROGRESS CARD
+  ═══════════════════════════════════════════ */
+  .progress-card {
+    background:#fff; border:1px solid var(--slate-50);
+    border-radius:var(--radius-xl); padding:2rem;
+    box-shadow:var(--shadow-sm);
+  }
+  .prog-header { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:1.25rem; }
+  .prog-title { font-size:1.05rem; font-weight:900; color:var(--slate-800); }
+  .prog-sub { font-size:.8rem; color:var(--slate-400); font-weight:500; }
+  .prog-pct { font-size:2.5rem; font-weight:900; color:var(--blue); line-height:1; }
+  .prog-pct-label { font-size:.6rem; font-weight:700; color:var(--slate-300); text-transform:uppercase; letter-spacing:.1em; text-align:right; margin-top:.2rem; }
+  .progress-bar-wrap {
+    width:100%; height:20px;
+    background:var(--slate-100);
+    border-radius:99px; overflow:hidden; padding:3px;
+    box-shadow:inset 0 2px 4px rgba(0,0,0,.06);
+    margin-bottom:.75rem;
+  }
+  .progress-bar-fill {
+    height:100%; background:var(--blue);
+    border-radius:99px;
+    box-shadow:0 2px 8px rgba(37,99,235,.4);
+    transition: width .6s cubic-bezier(.4,0,.2,1);
+  }
+  .prog-labels {
+    display:flex; justify-content:space-between;
+    font-size:.6rem; font-weight:900;
+    color:var(--slate-400); text-transform:uppercase; letter-spacing:.12em;
+  }
+
+  /* ═══════════════════════════════════════════
+     CALENDAR SECTION
+  ═══════════════════════════════════════════ */
+  .calendar-section {
+    width:100%; max-width:900px;
+    padding: 0 1rem 2rem;
+  }
+  .calendar-card {
+    background:#fff; border:1px solid var(--slate-50);
+    border-radius:var(--radius-xl); padding:2rem 2.5rem;
+    box-shadow:var(--shadow-sm);
+  }
+  .cal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem; }
+  .cal-title { font-size:1.4rem; font-weight:900; color:var(--slate-800); }
+  .cal-sub { font-size:.8rem; color:var(--slate-400); font-weight:500; margin-top:.15rem; }
+  .cal-icon {
+    width:48px; height:48px; background:var(--blue-light);
+    border-radius:14px; display:flex; align-items:center; justify-content:center;
+  }
+  .cal-icon svg { width:24px;height:24px;color:var(--blue); }
+  .days-grid {
+    display:grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap:.5rem;
+  }
+  @media(max-width:600px) {
+    .days-grid { grid-template-columns: repeat(6, 1fr); }
+  }
+  @media(max-width:400px) {
+    .days-grid { grid-template-columns: repeat(5, 1fr); }
+  }
+  .day-btn {
+    aspect-ratio:1; border-radius:14px;
+    border:none; cursor:pointer;
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    transition: all .18s;
+    position:relative;
+    background: var(--slate-50);
+    color: var(--slate-400);
+  }
+  .day-btn:hover:not(:disabled) { background: var(--slate-100); }
+  .day-btn:active:not(:disabled) { transform: scale(.92); }
+  .day-btn:disabled { opacity:.55; cursor:not-allowed; }
+  .day-btn .d-label { font-size:.5rem; font-weight:700; text-transform:uppercase; opacity:.6; margin-bottom:1px; }
+  .day-btn .d-num { font-size:1rem; font-weight:900; }
+  .day-btn .d-lock { font-size:.7rem; }
+  .day-btn.current {
+    background:var(--blue); color:#fff;
+    box-shadow: var(--shadow-blue);
+    ring: 4px solid var(--blue-light);
+    transform: scale(1.05);
+    z-index:2;
+  }
+  .day-btn.completed {
+    background:var(--green-light); color:var(--green);
+    border:1px solid #bbf7d0;
+  }
+  .day-btn.completed:hover { background:#bbf7d0; }
+  .day-btn.partial {
+    background:var(--blue-light); color:var(--blue);
+    border:1px solid #bfdbfe;
+  }
+  .day-btn.next-preview {
+    background:var(--amber-light); color:var(--amber);
+    border:1px solid #fde68a;
+    animation: pulse 2s infinite;
+  }
+  .day-btn .dot-badge {
+    position:absolute; top:-4px; right:-4px;
+    width:14px; height:14px;
+    background:var(--green); border:2px solid #fff;
+    border-radius:50%; display:flex; align-items:center; justify-content:center;
+    box-shadow: 0 1px 3px rgba(0,0,0,.2);
+  }
+  .day-btn .dot-badge::after { content:''; width:5px;height:5px;background:#fff;border-radius:50%; }
+  .day-btn.next-preview .dot-badge { background:var(--amber); }
+
+  /* ═══════════════════════════════════════════
+     RESET SECTION
+  ═══════════════════════════════════════════ */
+  .reset-section { width:100%; text-align:center; padding: 0 1rem 4rem; }
+  .reset-btn {
+    background:transparent; border:none; cursor:pointer;
+    font-size:.8rem; font-weight:700; text-transform:uppercase;
+    letter-spacing:.12em; color:var(--slate-400);
+    display:inline-flex; align-items:center; gap:.5rem;
+    padding: .75rem 1.5rem; border-radius:14px;
+    transition:all .2s;
+  }
+  .reset-btn:hover { color:var(--red); background:#fef2f2; }
+  .reset-btn.confirm { background:var(--red); color:#fff; animation: pulse 1s infinite; }
+
+  /* ═══════════════════════════════════════════
+     SETTINGS MODAL
+  ═══════════════════════════════════════════ */
+  #settings-modal {
+    position:fixed; inset:0; z-index:50;
+    display:flex; align-items:flex-end;
+    justify-content:center; padding:0;
+  }
+  @media(min-width:540px) {
+    #settings-modal { align-items:center; padding:1rem; }
+  }
+  #settings-modal.hidden { display:none; }
+  .modal-backdrop {
+    position:absolute; inset:0;
+    background:rgba(15,23,42,.65); backdrop-filter:blur(6px);
+  }
+  .modal-sheet {
+    position:relative; z-index:1;
+    background:#fff; width:100%; max-width:480px;
+    border-radius:var(--radius-xl) var(--radius-xl) 0 0;
+    padding:2rem; box-shadow:var(--shadow-lg);
+    animation: slideUp .3s cubic-bezier(.34,1.56,.64,1);
+  }
+  @media(min-width:540px) {
+    .modal-sheet { border-radius:var(--radius-xl); animation: scaleIn .3s cubic-bezier(.34,1.56,.64,1); }
+  }
+  .modal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem; }
+  .modal-title { font-size:1.4rem; font-weight:900; color:var(--slate-800); }
+  .close-btn {
+    width:36px; height:36px; border-radius:50%;
+    border:none; background:transparent; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    color:var(--slate-400); font-size:1.2rem;
+    transition:background .2s;
+  }
+  .close-btn:hover { background:var(--slate-100); }
+
+  .modal-profile {
+    display:flex; align-items:center; gap:1.25rem;
+    padding-bottom:2rem; margin-bottom:2rem;
+    border-bottom:1px solid var(--slate-50);
+  }
+  .profile-icon {
+    width:72px;height:72px; border-radius:20px;
+    background:var(--blue-light);
+    display:flex; align-items:center; justify-content:center;
+    border:4px solid #fff; box-shadow:var(--shadow-md);
+  }
+  .profile-icon svg { width:32px;height:32px;color:var(--blue); }
+  .profile-name { font-size:1.1rem; font-weight:700; color:var(--slate-800); }
+  .profile-sub { font-size:.8rem; color:var(--slate-400); font-weight:500; margin-top:.2rem; }
+  .profile-badge {
+    display:inline-block;
+    background:var(--blue); color:#fff;
+    font-size:.6rem; font-weight:900;
+    padding:.2rem .6rem; border-radius:99px;
+    text-transform:uppercase; letter-spacing:.06em;
+    margin-top:.5rem;
+  }
+
+  .section-label {
+    font-size:.7rem; font-weight:700; color:var(--slate-400);
+    text-transform:uppercase; letter-spacing:.15em; margin-bottom:.75rem;
+  }
+  .download-btn {
+    width:100%; padding:1.1rem;
+    background:var(--blue); color:#fff;
+    border:none; border-radius:var(--radius-md);
+    font-size:1rem; font-weight:800;
+    cursor:pointer; transition:all .2s;
+    display:flex; align-items:center; justify-content:center; gap:.75rem;
+    box-shadow:var(--shadow-blue);
+  }
+  .download-btn:hover { background:var(--blue-dark); transform:translateY(-1px); }
+  .download-btn svg { width:20px;height:20px; }
+  .download-note { text-align:center; color:var(--slate-400); font-size:.75rem; margin-top:.6rem; }
+  .modal-reset-btn {
+    width:100%; padding:1.1rem; margin-top:1rem;
+    border-radius:var(--radius-md);
+    border:none; cursor:pointer; font-size:1rem; font-weight:700;
+    display:flex; align-items:center; justify-content:center; gap:.75rem;
+    background:var(--slate-50); color:var(--slate-400);
+    transition:all .2s;
+  }
+  .modal-reset-btn:hover { background:#fef2f2; color:var(--red); }
+  .modal-reset-btn.confirm { background:var(--red); color:#fff; }
+
+  /* ═══════════════════════════════════════════
+     FOOTER
+  ═══════════════════════════════════════════ */
+  footer {
+    width:100%; background:var(--slate-900);
+    padding:3rem 1rem; text-align:center; margin-top:auto;
+  }
+  .footer-logo { display:flex; align-items:center; justify-content:center; gap:.5rem; margin-bottom:.75rem; }
+  .footer-logo-box {
+    width:24px;height:24px; background:var(--blue);
+    border-radius:6px; display:flex; align-items:center; justify-content:center;
+  }
+  .footer-logo-box svg { width:14px;height:14px;color:#fff; }
+  .footer-logo span { color:#fff; font-weight:900; font-size:1rem; letter-spacing:.1em; text-transform:uppercase; }
+  .footer-copy { color:var(--slate-500); font-size:.8rem; font-weight:500; }
+
+  /* ═══════════════════════════════════════════
+     MILESTONE CARD (hidden, for download)
+  ═══════════════════════════════════════════ */
+  #milestone-card {
+    position:fixed; left:-9999px; top:0;
+    width:800px; height:1000px;
+    background:linear-gradient(135deg, #1d4ed8, #4338ca);
+    padding:4rem; display:flex; flex-direction:column;
+    justify-content:space-between; align-items:center; text-align:center; color:#fff;
+  }
+  .ms-top .ms-icon-box {
+    width:120px;height:120px; background:rgba(255,255,255,.12);
+    border-radius:28px; display:flex; align-items:center; justify-content:center;
+    border:4px solid rgba(147,197,253,.5); margin:0 auto 1rem;
+  }
+  .ms-top .ms-icon-box span { font-size:3.5rem; font-weight:900; font-style:italic; }
+  .ms-challenge-label { color:#bfdbfe; font-size:1.1rem; font-weight:900; text-transform:uppercase; letter-spacing:.3em; }
+  .ms-mid h1 { font-size:5rem; font-weight:900; line-height:1; text-transform:uppercase; }
+  .ms-divider { width:80px; height:6px; background:#60a5fa; border-radius:99px; margin:1.25rem auto; }
+  .ms-quote { font-size:1.5rem; font-style:italic; color:#bfdbfe; max-width:500px; line-height:1.5; font-family:'Noto Sans Bengali',sans-serif; }
+  .ms-bot .ms-prog-bar-wrap { width:100%; height:20px; background:rgba(255,255,255,.12); border-radius:99px; overflow:hidden; border:2px solid rgba(255,255,255,.2); margin-bottom:.75rem; }
+  .ms-prog-fill { height:100%; background:#fff; border-radius:99px; }
+  .ms-prog-text { font-size:1rem; font-weight:900; text-transform:uppercase; letter-spacing:.15em; color:#bfdbfe; }
+  .ms-stats { display:flex; justify-content:space-between; width:100%; padding-top:2rem; border-top:1px solid rgba(255,255,255,.12); margin-top:1.5rem; }
+  .ms-stat p:first-child { color:#bfdbfe; font-size:.8rem; font-weight:700; text-transform:uppercase; letter-spacing:.1em; margin-bottom:.25rem; }
+  .ms-stat p:last-child { font-size:1.25rem; font-weight:900; text-transform:uppercase; }
+  .ms-stat.right { text-align:right; }
+
+  /* ═══════════════════════════════════════════
+     ANIMATIONS
+  ═══════════════════════════════════════════ */
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+  @keyframes scaleIn { from{opacity:0;transform:scale(.9)} to{opacity:1;transform:scale(1)} }
+  @keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.7} }
+  @keyframes spin { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+
+  .fade-in { animation: fadeIn .4s ease; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════ ONBOARDING ═══════════ -->
+<div id="onboarding">
+  <div class="onboarding-card">
+    <div class="onboarding-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/></svg>
+    </div>
+    <h2>৩০ দিনের সেলফ ইমপ্রুভমেন্ট (লেভেল - ইজি) চ্যালেঞ্জে আপনাকে স্বাগতম</h2>
+    <div class="rules-box">
+      <p class="rules-label">আপনার কাজ হলো:</p>
+      <ul>
+        <li>
+          <span class="dot-icon"></span>
+          প্রতি দিন আপনাকে যে ২ টা টাস্ক দেওয়া হবে তা পূরণ করে চেকবক্সে ক্লিক করা।
+        </li>
+        <li>
+          <span class="dot-icon"></span>
+          প্রতি দিনের টাস্ক প্রতিদিন কমপ্লিট করা এবং কনসিস্টেন্ট থাকা।
+        </li>
+      </ul>
+    </div>
+    <label class="agree-label">
+      <input type="checkbox" id="agree-check">
+      <span class="checkbox-ui"></span>
+      <span class="agree-text">আমি সব নিয়ম ঠিক ভাবে পড়েছি</span>
+    </label>
+    <button class="btn-primary" id="onboarding-btn" disabled>Okay</button>
+  </div>
+</div>
+
+<!-- ═══════════ HEADER ═══════════ -->
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-box"><span>30</span></div>
+      <span class="logo-text">Challenge Tracker</span>
+    </div>
+    <div class="streak-badge">
+      <span class="flame">🔥</span>
+      <span id="streak-text">Streak: 1 Days</span>
+    </div>
+    <button class="settings-btn" id="settings-open">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.43.992a7.723 7.723 0 010 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 010-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- ═══════════ MAIN ═══════════ -->
+<main>
+  <div class="left-col">
+    <div class="challenge-card fade-in" id="challenge-card">
+      <div class="card-header">
+        <div class="card-label" id="card-label">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/></svg>
+          GOAL OF THE DAY
+        </div>
+        <div class="card-day" id="card-day-title">DAY 1</div>
+      </div>
+      <div class="tasks-list" id="tasks-list"></div>
+      <div class="card-footer">
+        <div class="card-status" id="card-status">
+          <span>★</span> <span id="status-text">Day 1 In Progress</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="right-col">
+    <!-- Motivation -->
+    <div class="motivation-card">
+      <div>
+        <div class="wisdom-label" id="wisdom-label">Wisdom 1</div>
+        <p class="wisdom-text" id="wisdom-text">Loading...</p>
+      </div>
+      <div class="mot-footer">
+        <span class="mot-label">Mindset Matters</span>
+        <div class="mot-nav">
+          <button id="mot-prev">&#8249;</button>
+          <button id="mot-next">&#8250;</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Progress -->
+    <div class="progress-card">
+      <div class="prog-header">
+        <div>
+          <div class="prog-title">Overall Progress</div>
+          <div class="prog-sub">Your 30-day transformation</div>
+        </div>
+        <div>
+          <div class="prog-pct" id="prog-pct">0%</div>
+          <div class="prog-pct-label">Completed</div>
+        </div>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="prog-fill" style="width:0%"></div>
+      </div>
+      <div class="prog-labels">
+        <span>Day 1</span>
+        <span id="prog-tasks">0 / 60 Tasks</span>
+        <span>Day 30</span>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ═══════════ CALENDAR ═══════════ -->
+<section class="calendar-section">
+  <div class="calendar-card">
+    <div class="cal-header">
+      <div>
+        <div class="cal-title">Your Journey</div>
+        <div class="cal-sub">Jump to any day to review tasks</div>
+      </div>
+      <div class="cal-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/></svg>
+      </div>
+    </div>
+    <div class="days-grid" id="days-grid"></div>
+  </div>
+</section>
+
+<!-- ═══════════ RESET ═══════════ -->
+<div class="reset-section">
+  <button class="reset-btn" id="reset-btn">
+    <span id="reset-icon">↺</span>
+    <span id="reset-text">Reset All Progress</span>
+  </button>
+</div>
+
+<!-- ═══════════ SETTINGS MODAL ═══════════ -->
+<div id="settings-modal" class="hidden">
+  <div class="modal-backdrop" id="modal-backdrop"></div>
+  <div class="modal-sheet">
+    <div class="modal-header">
+      <span class="modal-title">Challenge Tools</span>
+      <button class="close-btn" id="settings-close">✕</button>
+    </div>
+    <div class="modal-profile">
+      <div class="profile-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 01-.982-3.172M9.497 14.25a7.454 7.454 0 00.981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 007.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M7.73 9.728a6.726 6.726 0 002.748 1.35m8.272-6.842V4.5c0 2.108-.966 3.99-2.48 5.228m2.48-5.492a46.32 46.32 0 012.916.52 6.003 6.003 0 01-5.395 4.972m0 0a6.726 6.726 0 01-2.749 1.35m0 0a6.772 6.772 0 01-3.044 0"/></svg>
+      </div>
+      <div>
+        <div class="profile-name">Active Challenge</div>
+        <div class="profile-sub" id="modal-day-info">Day 1 in progress</div>
+        <span class="profile-badge">Local Storage Enabled</span>
+      </div>
+    </div>
+    <div class="section-label">Milestone Card</div>
+    <button class="download-btn" id="download-btn">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
+      Download Milestone
+    </button>
+    <p class="download-note" id="modal-note">Generate a card for your Day 1 progress</p>
+    <button class="modal-reset-btn" id="modal-reset-btn">
+      <span id="modal-reset-icon">↺</span>
+      <span id="modal-reset-text">Reset Challenge</span>
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════ MILESTONE (hidden for export) ═══════════ -->
+<div id="milestone-card">
+  <div class="ms-top">
+    <div class="ms-icon-box"><span>30</span></div>
+    <p class="ms-challenge-label">30 Days Challenge</p>
+  </div>
+  <div class="ms-mid">
+    <h1 id="ms-day">DAY 1</h1>
+    <div class="ms-divider"></div>
+    <p class="ms-quote">আমি পারছি এবং আমি শেষ পর্যন্ত করবো।</p>
+  </div>
+  <div class="ms-bot" style="width:100%">
+    <div class="ms-prog-bar-wrap">
+      <div class="ms-prog-fill" id="ms-fill" style="width:0%"></div>
+    </div>
+    <p class="ms-prog-text" id="ms-prog-text">Overall Progress: 0%</p>
+    <div class="ms-stats">
+      <div class="ms-stat">
+        <p>Progress</p>
+        <p>Consistently Rising</p>
+      </div>
+      <div class="ms-stat right">
+        <p>Streak</p>
+        <p id="ms-streak">1 Days</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer>
+  <div class="footer-logo">
+    <div class="footer-logo-box">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+    </div>
+    <span>30 Days Challenge</span>
+  </div>
+  <p class="footer-copy">© 2024 Productivity Hub • Stay Consistent • No Login Required</p>
+</footer>
+
+<script>
+// ════════════════════════════════════════════
+// DATA
+// ════════════════════════════════════════════
+const all30Days = [
+  { day:1,  tasks:[{id:1,text:"সকালে ঘুম থেকে উঠেই 1 গ্লাস পানি পান করা।"},{id:2,text:"নিজের বিছানা গুছিয়ে ফেলা।"}] },
+  { day:2,  tasks:[{id:3,text:"10 মিনিট বাইরে হাঁটাহাঁটি করো।"},{id:4,text:"তোমার পছন্দের কোনো ফল খাও।"}] },
+  { day:3,  tasks:[{id:5,text:"5 থেকে 10টা Push-ups দাও।"},{id:6,text:"পরিচিত 3-5 জনকে সালাম বা অভিবাদন জানাও।"}] },
+  { day:4,  tasks:[{id:7,text:"একটি সিদ্ধ ডিম খাও।"},{id:8,text:"সারাদিনের খরচের হিসাব লিখে রাখো।"}] },
+  { day:5,  tasks:[{id:9,text:"10টি নতুন ইংরেজি শব্দ শেখো।"},{id:10,text:"ঘুমানোর 1 ঘণ্টা আগে ফোন দূরে রাখো।"}] },
+  { day:6,  tasks:[{id:11,text:"ফোনের অপ্রয়োজনীয় অ্যাপ ডিলিট করো।"},{id:12,text:"পুরনো কোনো বন্ধুর খবর নাও (কল/মেসেজ)।"}] },
+  { day:7,  tasks:[{id:13,text:"খুব সকালে উঠে বাইরে হাঁটতে যাও।"},{id:14,text:"আজ 3 জন মানুষের গুণগান বা প্রশংসা করো।"}] },
+  { day:8,  tasks:[{id:15,text:"ফেসওয়াশ দিয়ে মুখ ধুয়ে ফ্রেশ হও।"},{id:16,text:"অতিরিক্ত 2 গ্লাস পানি পান করো।"}] },
+  { day:9,  tasks:[{id:17,text:"5-10 মিনিট লাইট স্ট্রেচিং করো।"},{id:18,text:"রাতে এক গ্লাস কুসুম গরম দুধ পান করো।"}] },
+  { day:10, tasks:[{id:19,text:"প্রিয় গান শুনে নিজের রুমটা গুছিয়ে ফেলো।"},{id:20,text:"আজ সারাদিন বাইরের ভাজাপোড়া খাবার এড়িয়ে চলো।"}] },
+  { day:11, tasks:[{id:21,text:"আয়নার সামনে দাঁড়িয়ে নিজেকে বলো \"আমি পারবো\"।"},{id:22,text:"অন্তত 30 মিনিট ধর্মচর্চা বা সৃষ্টিকর্তাকে স্মরণ করো।"}] },
+  { day:12, tasks:[{id:23,text:"10-20 মিনিট English Speaking প্র্যাকটিস করো।"},{id:24,text:"কাউকে সাহায্যের জন্য 'ধন্যবাদ' জানাও।"}] },
+  { day:13, tasks:[{id:25,text:"আজ সারাদিন কোনো গালাগালি বা রাগ করবে না।"},{id:26,text:"একটি ছোট চারাগাছ রোপণ করো (টবেও হতে পারে)।"}] },
+  { day:14, tasks:[{id:27,text:"নিজের ময়লা কাপড়গুলো নিজে ধুয়ে ফেলো।"},{id:28,text:"পরিবারের সাথে একটি ইনডোর বা বোর্ড গেম খেলো।"}] },
+  { day:15, tasks:[{id:29,text:"একজন অপরিচিত লোকের কাছে সময় বা ঠিকানা জিজ্ঞেস করো।"},{id:30,text:"ঠিক সময়ে দুপুরের খাবার খাও।"}] },
+  { day:16, tasks:[{id:31,text:"15-20 মিনিট কোনো বই পড়ো (সাজেশন: How to Win Friends...)"},{id:32,text:"নিজের নখ বা চুলের যত্ন নাও (Self-grooming)।"}] },
+  { day:17, tasks:[{id:33,text:"পুরনো বন্ধুর সাথে দেখা করে আড্ডা দাও।"},{id:34,text:"আজ সারাদিন মেরুদণ্ড সোজা করে কনফিডেন্সের সাথে হাঁটো।"}] },
+  { day:18, tasks:[{id:35,text:"চিনি বা মিষ্টিজাতীয় খাবার এড়িয়ে চলো।"},{id:36,text:"আজ অতিরিক্ত 2 গ্লাস পানি পান করো।"}] },
+  { day:19, tasks:[{id:37,text:"বিকেলে কোথাও একা বা বন্ধুদের সাথে ঘুরতে যাও।"},{id:38,text:"প্রিয় কোনো মানুষের সাথে মন খুলে কথা বলো।"}] },
+  { day:20, tasks:[{id:39,text:"30 মিনিট কোনো আউটডোর গেম খেলো বা ব্যায়াম করো।"},{id:40,text:"নিজের প্রিয় কোনো খাবার এনজয় করো।"}] },
+  { day:21, tasks:[{id:41,text:"অল্প পরিচিত কাউকে তার কুশল জিজ্ঞেস করো।"},{id:42,text:"মাঝারি সাইজের 2টা কলা খাও।"}] },
+  { day:22, tasks:[{id:43,text:"আজ সকালে অ্যালার্ম বাজার সাথে সাথে বিছানা ছাড়ো।"},{id:44,text:"নতুন কোনো হেলদি খাবার (যেমন সালাদ) ট্রাই করো।"}] },
+  { day:23, tasks:[{id:45,text:"10 থেকে 20টি Sit-ups দাও।"},{id:46,text:"ডাস্টবিন ছাড়া কোথাও ময়লা ফেলবে না।"}] },
+  { day:24, tasks:[{id:47,text:"5 মিনিট চোখ বন্ধ করে মেডিটেশন করো।"},{id:48,text:"গোসলের পর একদম পরিষ্কার ও ইস্ত্রি করা কাপড় পরো।"}] },
+  { day:25, tasks:[{id:49,text:"আজ সারাদিনের কাজের একটি রুটিন বা To-Do List করো।"},{id:50,text:"কারো সাথে কথা বলার সময় মুখে হাসি রাখো।"}] },
+  { day:26, tasks:[{id:51,text:"অযথা বসে না থেকে প্রোডাক্টিভ কিছু করো।"},{id:52,text:"কারো সাথে তর্কে জড়াবে না, বিনয়ী থাকো।"}] },
+  { day:27, tasks:[{id:53,text:"একদম নতুন কোনো ব্যক্তির সাথে পরিচিত হও।"},{id:54,text:"আজ সবার সাথে খুব ভালো ব্যবহার করো।"}] },
+  { day:28, tasks:[{id:55,text:"গত 28 দিনে তোমার কী কী পরিবর্তন হয়েছে তা খাতায় লেখো।"},{id:56,text:"নিজেকে ছোট কোনো ট্রিট দাও (যেমন আইসক্রিম বা চকলেট)।"}] },
+  { day:29, tasks:[{id:57,text:"আগামীকালকের জন্য একটি বড় লক্ষ্য ঠিক করো।"},{id:58,text:"গত 30 দিনের চ্যালেঞ্জগুলো রিভাইজ করো।"}] },
+  { day:30, tasks:[{id:59,text:"সোশ্যাল মিডিয়ায় চ্যালেঞ্জ কমপ্লিট হওয়ার পোস্ট দাও।"},{id:60,text:"এই অর্জনের জন্য নিজেকে ধন্যবাদ জানাও।"}] }
+];
+
+const motivations = [
+  "তর্ক এড়িয়ে চলুন: তর্কে জেতার একমাত্র উপায় হলো তা এড়িয়ে যাওয়া।",
+  "শ্রদ্ধা দেখান: অন্যের মতামতের প্রতি শ্রদ্ধা রাখুন। কখনোই বলবেন না, \"আপনি ভুল।\"",
+  "ভুল স্বীকার করুন: নিজের ভুল হলে তা দ্রুত এবং আন্তরিকভাবে স্বীকার করুন।",
+  "বন্ধুসুলভ হোন: যেকোনো আলোচনা সবসময় বন্ধুত্বপূর্ণভাবে শুরু করুন।",
+  "'হ্যাঁ' আদায় করুন: আলোচনার শুরুতেই অপরপক্ষকে দিয়ে কয়েকবার \"হ্যাঁ\" বলিয়ে নিন।",
+  "তাকে বলতে দিন: অপরপক্ষকে আপনার চেয়ে বেশি কথা বলার সুযোগ দিন।",
+  "নিজের আইডিয়া ভাবতে দিন: অন্যকে এটি অনুভব করতে দিন যে আইডিয়াটি তার নিজের।",
+  "তার চোখে দেখুন: আন্তরিকভাবে অন্যের দৃষ্টিভঙ্গি থেকে বিষয়গুলো দেখার চেষ্টা করুন।",
+  "সহানুভূতিশীল হোন: অন্যের আকাঙ্ক্ষা ও চিন্তার প্রতি সবসময় সহানুভূতি দেখান।",
+  "মহত্ত্বকে জাগিয়ে তুলুন: মানুষের মহৎ এবং আদর্শবাদী উদ্দেশ্যগুলোতে আবেদন জানান।",
+  "নাটকীয়তা যোগ করুন: আপনার আইডিয়াগুলোকে সজীব এবং আকর্ষণীয়ভাবে উপস্থাপন করুন।",
+  "চ্যালেঞ্জ ছুড়ে দিন: যখন কিছুই কাজ করে না, তখন একটি চ্যালেঞ্জ ছুড়ে দিন।",
+  "প্রশংসা দিয়ে শুরু: কারো ভুল ধরার আগে তার কোনো ভালো কাজের আন্তরিক প্রশংসা দিয়ে কথা শুরু করো।",
+  "পরোক্ষভাবে ভুল ধরানো: সরাসরি 'তুমি ভুল করেছ' না বলে কৌশলে বা ইশারায় ভুলটি বুঝিয়ে দাও।",
+  "নিজের ভুল আগে স্বীকার: অন্যকে সমালোচনা করার আগে নিজের করা পুরনো ভুলগুলো নিয়ে কথা বলো।",
+  "আদেশ না দিয়ে প্রশ্ন: \"এটি করো\" না বলে প্রশ্ন করো— \"আপনার কি মনে হয় এটি করলে ভালো হবে?\"",
+  "সম্মান রক্ষা: সবার সামনে কাউকে লজ্জিত কোরো না।",
+  "উন্নতির প্রশংসা: মানুষের সামান্যতম উন্নতিতেও মন খুলে প্রশংসা করো।",
+  "ভালো নামের মর্যাদা: মানুষকে একটি ভালো উপাধি বা সুনাম দাও।",
+  "ভুল সংশোধনকে সহজ করা: ভুলটি সংশোধন করা খুব সহজ—এই উৎসাহ দাও।",
+  "অন্যকে খুশি রাখা: কাজটিকে এমনভাবে উপস্থাপন করো যাতে অপরপক্ষ সেটি করতে আনন্দ পায়।"
+];
+
+// ════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════
+const DEFAULT_STATE = {
+  currentDay: 1,
+  completedTasks: {},
+  startDate: new Date().toISOString(),
+  lastVisitDate: new Date().toISOString(),
+  missedDays: 0,
+  hasSeenOnboarding: false
+};
+
+function loadState() {
+  const saved = localStorage.getItem('thriving_challenge_state');
+  if (saved) try { return JSON.parse(saved); } catch(e){}
+  return { ...DEFAULT_STATE, startDate: new Date().toISOString(), lastVisitDate: new Date().toISOString() };
+}
+
+function saveState(s) {
+  localStorage.setItem('thriving_challenge_state', JSON.stringify(s));
+}
+
+let state = loadState();
+let viewDay = null;
+let motivationIndex = 0;
+let resetConfirm = false;
+let modalResetConfirm = false;
+
+// ════════════════════════════════════════════
+// COMPUTED
+// ════════════════════════════════════════════
+function getMaxUnlockedDay() {
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const start = new Date(state.startDate);
+  start.setHours(0,0,0,0);
+  const diff = Math.floor((today - start) / 86400000) + 1;
+  return Math.min(30, Math.max(1, diff));
+}
+
+function getProgressInfo() {
+  const total = 60;
+  const done = Object.values(state.completedTasks).reduce((acc, arr) => acc + arr.filter(Boolean).length, 0);
+  return { done, total, pct: Math.round((done/total)*100) };
+}
+
+function getActiveFocusDay() {
+  const curTasks = state.completedTasks[state.currentDay] || [false,false];
+  const allDoneToday = curTasks[0] && curTasks[1];
+  const defaultFocus = allDoneToday && state.currentDay < 30 ? state.currentDay + 1 : state.currentDay;
+  return viewDay || defaultFocus;
+}
+
+// ════════════════════════════════════════════
+// ADVANCE DAY LOGIC
+// ════════════════════════════════════════════
+function advanceDayIfNeeded() {
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const lastVisit = new Date(state.lastVisitDate);
+  lastVisit.setHours(0,0,0,0);
+  const diffDays = Math.floor((today - lastVisit) / 86400000);
+  if (diffDays > 0) {
+    const tasks = state.completedTasks[state.currentDay] || [false,false];
+    const someTasksDone = tasks.some(t => t);
+    state = {
+      ...state,
+      currentDay: someTasksDone ? Math.min(30, state.currentDay + 1) : state.currentDay,
+      lastVisitDate: new Date().toISOString(),
+      missedDays: someTasksDone ? 0 : state.missedDays + diffDays
+    };
+    saveState(state);
+    viewDay = null;
+  } else {
+    state = { ...state, lastVisitDate: new Date().toISOString() };
+    saveState(state);
+  }
+}
+
+// ════════════════════════════════════════════
+// RENDER
+// ════════════════════════════════════════════
+function render() {
+  const activeFocusDay = getActiveFocusDay();
+  const curTasks = state.completedTasks[state.currentDay] || [false,false];
+  const allDoneToday = curTasks[0] && curTasks[1];
+  const isFuturePreview = activeFocusDay > state.currentDay;
+  const isReviewMode = activeFocusDay < state.currentDay ||
+    (activeFocusDay === state.currentDay && allDoneToday && viewDay === state.currentDay);
+  const tasksForDay = state.completedTasks[activeFocusDay] || [false,false];
+  const dayData = all30Days[activeFocusDay - 1];
+
+  // Header streak
+  document.getElementById('streak-text').textContent = `Streak: ${state.currentDay} Days`;
+
+  // Card label
+  const labelEl = document.getElementById('card-label');
+  let labelText = isFuturePreview ? 'PREVIEW: TOMORROW' : isReviewMode ? 'REVIEW MODE' : 'GOAL OF THE DAY';
+  labelEl.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:14px;height:14px"><path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/></svg>${labelText}`;
+
+  document.getElementById('card-day-title').textContent = `DAY ${activeFocusDay}`;
+
+  // Tasks
+  const tasksList = document.getElementById('tasks-list');
+  tasksList.innerHTML = '';
+  dayData.tasks.forEach((task, idx) => {
+    const isDone = tasksForDay[idx];
+    const disabled = isFuturePreview || isReviewMode;
+    const btn = document.createElement('button');
+    btn.className = 'task-btn' + (isDone ? ' done' : '') + (disabled ? ' disabled' : '');
+    btn.disabled = disabled;
+    btn.innerHTML = `<div class="task-checkbox"></div><p class="task-text">${task.text}</p>`;
+    if (!disabled) {
+      btn.addEventListener('click', () => toggleTask(idx));
+    }
+    tasksList.appendChild(btn);
+  });
+
+  // Card status
+  const statusText = document.getElementById('status-text');
+  if (isFuturePreview) statusText.textContent = 'আজ এটুকুই! কাল রাত ১২টার পর খুলবে';
+  else if (isReviewMode) statusText.textContent = 'রিভিউ মোড: আপনার আগের অগ্রগতি';
+  else statusText.textContent = `Day ${activeFocusDay} In Progress`;
+
+  // Progress
+  const { done, total, pct } = getProgressInfo();
+  document.getElementById('prog-pct').textContent = `${pct}%`;
+  document.getElementById('prog-fill').style.width = `${pct}%`;
+  document.getElementById('prog-tasks').textContent = `${done} / ${total} Tasks`;
+
+  // Calendar grid
+  renderCalendar();
+
+  // Motivation
+  document.getElementById('wisdom-label').textContent = `Wisdom ${motivationIndex + 1}`;
+  document.getElementById('wisdom-text').textContent = `"${motivations[motivationIndex]}"`;
+
+  // Modal info
+  document.getElementById('modal-day-info').textContent = `Day ${state.currentDay} in progress`;
+  document.getElementById('modal-note').textContent = `Generate a card for your Day ${state.currentDay} progress${state.missedDays > 0 ? ` • Warning: ${state.missedDays} days silent` : ''}`;
+
+  // Milestone
+  document.getElementById('ms-day').textContent = `DAY ${state.currentDay}`;
+  document.getElementById('ms-fill').style.width = `${pct}%`;
+  document.getElementById('ms-prog-text').textContent = `Overall Progress: ${pct}%`;
+  document.getElementById('ms-streak').textContent = `${state.currentDay} Days`;
+
+  // Onboarding
+  if (!state.hasSeenOnboarding) {
+    document.getElementById('onboarding').classList.remove('hidden');
+  } else {
+    document.getElementById('onboarding').classList.add('hidden');
+  }
+}
+
+function renderCalendar() {
+  const grid = document.getElementById('days-grid');
+  grid.innerHTML = '';
+  const isTodayDone = (state.completedTasks[state.currentDay] || [false,false]).every(t => t);
+  const maxLinkable = isTodayDone ? state.currentDay + 1 : state.currentDay;
+
+  for (let d = 1; d <= 30; d++) {
+    const isCompleted = state.completedTasks[d] && state.completedTasks[d][0] && state.completedTasks[d][1];
+    const isCurrent = state.currentDay === d;
+    const hasSome = state.completedTasks[d] && (state.completedTasks[d][0] || state.completedTasks[d][1]);
+    const isLocked = d > maxLinkable;
+    const isNextPreview = d === state.currentDay + 1 && isTodayDone;
+
+    const btn = document.createElement('button');
+    btn.className = 'day-btn';
+    if (isLocked) btn.classList.add('locked'), btn.disabled = true;
+    else if (isCurrent) btn.classList.add('current');
+    else if (isCompleted) btn.classList.add('completed');
+    else if (isNextPreview) btn.classList.add('next-preview');
+    else if (hasSome) btn.classList.add('partial');
+
+    if (isLocked) {
+      btn.innerHTML = `<span class="d-lock">🔒</span>`;
+    } else {
+      btn.innerHTML = `<span class="d-label">D</span><span class="d-num">${d}</span>`;
+    }
+    if (isCompleted && !isLocked) {
+      const badge = document.createElement('div');
+      badge.className = 'dot-badge';
+      btn.appendChild(badge);
+    }
+    if (isNextPreview) {
+      const badge = document.createElement('div');
+      badge.className = 'dot-badge';
+      badge.style.background = 'var(--amber)';
+      btn.appendChild(badge);
+    }
+    if (!isLocked) {
+      btn.addEventListener('click', () => { viewDay = d; render(); });
+    }
+    grid.appendChild(btn);
+  }
+}
+
+// ════════════════════════════════════════════
+// ACTIONS
+// ════════════════════════════════════════════
+function toggleTask(idx) {
+  const activeFocusDay = getActiveFocusDay();
+  const isFuturePreview = activeFocusDay > state.currentDay;
+  if (activeFocusDay !== state.currentDay || isFuturePreview) return;
+
+  const cur = state.completedTasks[state.currentDay] || [false,false];
+  const updated = [...cur];
+  updated[idx] = !updated[idx];
+  state = {
+    ...state,
+    completedTasks: { ...state.completedTasks, [state.currentDay]: updated },
+    lastVisitDate: new Date().toISOString()
+  };
+  saveState(state);
+  render();
+}
+
+function resetAll() {
+  state = {
+    ...DEFAULT_STATE,
+    startDate: new Date().toISOString(),
+    lastVisitDate: new Date().toISOString(),
+    hasSeenOnboarding: true
+  };
+  saveState(state);
+  viewDay = null;
+  resetConfirm = false;
+  modalResetConfirm = false;
+  render();
+  updateResetBtns();
+}
+
+function updateResetBtns() {
+  const btn = document.getElementById('reset-btn');
+  btn.className = 'reset-btn' + (resetConfirm ? ' confirm' : '');
+  document.getElementById('reset-text').textContent = resetConfirm ? 'Click Again to Reset Everything' : 'Reset All Progress';
+  document.getElementById('reset-icon').style.animation = resetConfirm ? 'spin 1s linear infinite' : '';
+
+  const mBtn = document.getElementById('modal-reset-btn');
+  mBtn.className = 'modal-reset-btn' + (modalResetConfirm ? ' confirm' : '');
+  document.getElementById('modal-reset-text').textContent = modalResetConfirm ? 'Tap Again to Confirm' : 'Reset Challenge';
+}
+
+// ════════════════════════════════════════════
+// MILESTONE DOWNLOAD (canvas-based)
+// ════════════════════════════════════════════
+function downloadMilestone() {
+  const canvas = document.createElement('canvas');
+  canvas.width = 800; canvas.height = 1000;
+  const ctx = canvas.getContext('2d');
+  const { pct } = getProgressInfo();
+
+  // Background gradient
+  const grad = ctx.createLinearGradient(0,0,800,1000);
+  grad.addColorStop(0, '#1d4ed8');
+  grad.addColorStop(1, '#4338ca');
+  ctx.fillStyle = grad; ctx.fillRect(0,0,800,1000);
+
+  // Icon box
+  ctx.fillStyle = 'rgba(255,255,255,0.12)';
+  roundRect(ctx, 300,60,200,200,28); ctx.fill();
+  ctx.strokeStyle = 'rgba(147,197,253,0.5)'; ctx.lineWidth = 6;
+  roundRect(ctx, 300,60,200,200,28); ctx.stroke();
+  ctx.fillStyle='#fff'; ctx.font='bold 80px Space Grotesk, sans-serif';
+  ctx.textAlign='center'; ctx.fillText('30', 400, 200);
+
+  // Challenge label
+  ctx.fillStyle='#bfdbfe'; ctx.font='bold 20px Space Grotesk, sans-serif';
+  ctx.letterSpacing='0.3em'; ctx.fillText('30 DAYS CHALLENGE', 400, 295);
+
+  // Day
+  ctx.fillStyle='#fff'; ctx.font='bold 120px Space Grotesk, sans-serif';
+  ctx.fillText(`DAY ${state.currentDay}`, 400, 450);
+
+  // Divider
+  ctx.fillStyle='#60a5fa'; roundRect(ctx, 340,470,120,10,5); ctx.fill();
+
+  // Quote
+  ctx.fillStyle='#bfdbfe'; ctx.font='italic 28px Noto Sans Bengali, sans-serif';
+  wrapText(ctx, '"আমি পারছি এবং আমি শেষ পর্যন্ত করবো।"', 400, 540, 600, 40);
+
+  // Progress bar
+  ctx.fillStyle='rgba(255,255,255,0.12)'; roundRect(ctx, 60,700,680,28,14); ctx.fill();
+  ctx.strokeStyle='rgba(255,255,255,0.2)'; ctx.lineWidth=3; roundRect(ctx,60,700,680,28,14); ctx.stroke();
+  if (pct > 0) {
+    ctx.fillStyle='#fff'; roundRect(ctx, 60,700, Math.max(28, 680*pct/100), 28, 14); ctx.fill();
+  }
+  ctx.fillStyle='#bfdbfe'; ctx.font='bold 22px Space Grotesk, sans-serif';
+  ctx.fillText(`Overall Progress: ${pct}%`, 400, 762);
+
+  // Stats
+  ctx.strokeStyle='rgba(255,255,255,0.12)'; ctx.lineWidth=2;
+  ctx.beginPath(); ctx.moveTo(60,800); ctx.lineTo(740,800); ctx.stroke();
+
+  ctx.fillStyle='#bfdbfe'; ctx.font='bold 16px Space Grotesk, sans-serif';
+  ctx.textAlign='left'; ctx.fillText('PROGRESS', 60, 840);
+  ctx.fillStyle='#fff'; ctx.font='bold 24px Space Grotesk, sans-serif';
+  ctx.fillText('Consistently Rising', 60, 872);
+
+  ctx.fillStyle='#bfdbfe'; ctx.font='bold 16px Space Grotesk, sans-serif';
+  ctx.textAlign='right'; ctx.fillText('STREAK', 740, 840);
+  ctx.fillStyle='#fff'; ctx.font='bold 24px Space Grotesk, sans-serif';
+  ctx.fillText(`${state.currentDay} Days`, 740, 872);
+
+  canvas.toBlob(blob => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.download = `30day-challenge-day-${state.currentDay}.png`;
+    a.href = url; a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 3000);
+  });
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x+r, y);
+  ctx.lineTo(x+w-r, y); ctx.arcTo(x+w,y, x+w,y+r, r);
+  ctx.lineTo(x+w, y+h-r); ctx.arcTo(x+w,y+h, x+w-r,y+h, r);
+  ctx.lineTo(x+r, y+h); ctx.arcTo(x,y+h, x,y+h-r, r);
+  ctx.lineTo(x, y+r); ctx.arcTo(x,y, x+r,y, r);
+  ctx.closePath();
+}
+
+function wrapText(ctx, text, x, y, maxW, lineH) {
+  const words = text.split(''); let line = '';
+  // For Bengali, just draw as-is centered since character wrapping is complex
+  ctx.textAlign='center';
+  ctx.fillText(text, x, y);
+}
+
+// ════════════════════════════════════════════
+// EVENT LISTENERS
+// ════════════════════════════════════════════
+
+// Onboarding
+document.getElementById('agree-check').addEventListener('change', function() {
+  document.getElementById('onboarding-btn').disabled = !this.checked;
+});
+document.getElementById('onboarding-btn').addEventListener('click', () => {
+  state = { ...state, hasSeenOnboarding: true };
+  saveState(state);
+  render();
+});
+
+// Motivation nav
+document.getElementById('mot-prev').addEventListener('click', () => {
+  motivationIndex = (motivationIndex - 1 + motivations.length) % motivations.length;
+  render();
+});
+document.getElementById('mot-next').addEventListener('click', () => {
+  motivationIndex = (motivationIndex + 1) % motivations.length;
+  render();
+});
+
+// Settings
+document.getElementById('settings-open').addEventListener('click', () => {
+  viewDay = null;
+  document.getElementById('settings-modal').classList.remove('hidden');
+});
+document.getElementById('settings-close').addEventListener('click', () => {
+  document.getElementById('settings-modal').classList.add('hidden');
+  modalResetConfirm = false;
+  updateResetBtns();
+});
+document.getElementById('modal-backdrop').addEventListener('click', () => {
+  document.getElementById('settings-modal').classList.add('hidden');
+  modalResetConfirm = false;
+  updateResetBtns();
+});
+
+// Download
+document.getElementById('download-btn').addEventListener('click', downloadMilestone);
+
+// Reset (main)
+document.getElementById('reset-btn').addEventListener('click', () => {
+  if (resetConfirm) { resetAll(); }
+  else {
+    resetConfirm = true;
+    updateResetBtns();
+    setTimeout(() => { resetConfirm = false; updateResetBtns(); }, 3000);
+  }
+});
+
+// Reset (modal)
+document.getElementById('modal-reset-btn').addEventListener('click', () => {
+  if (modalResetConfirm) { resetAll(); document.getElementById('settings-modal').classList.add('hidden'); }
+  else {
+    modalResetConfirm = true;
+    updateResetBtns();
+    setTimeout(() => { modalResetConfirm = false; updateResetBtns(); }, 3000);
+  }
+});
+
+// Midnight timer
+function scheduleMidnight() {
+  const now = new Date();
+  const next = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+  setTimeout(() => { advanceDayIfNeeded(); render(); scheduleMidnight(); }, next - now + 100);
+}
+
+// ════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════
+advanceDayIfNeeded();
+render();
+scheduleMidnight();
+</script>
+</body>
+</html>
